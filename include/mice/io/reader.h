@@ -10,15 +10,15 @@ typedef struct Mice_Reader {
   size_t count;
 } Mice_Reader;
 
-int8_t mice_reader_read_byte(Mice_Reader *reader);
-int16_t mice_reader_read_short(Mice_Reader *reader);
-int32_t mice_reader_read_int(Mice_Reader *reader);
-int64_t mice_reader_read_long(Mice_Reader *reader);
-
 uint8_t mice_reader_read_ubyte(Mice_Reader *reader);
 uint16_t mice_reader_read_ushort(Mice_Reader *reader);
 uint32_t mice_reader_read_uint(Mice_Reader *reader);
 uint64_t mice_reader_read_ulong(Mice_Reader *reader);
+
+int8_t mice_reader_read_byte(Mice_Reader *reader);
+int16_t mice_reader_read_short(Mice_Reader *reader);
+int32_t mice_reader_read_int(Mice_Reader *reader);
+int64_t mice_reader_read_long(Mice_Reader *reader);
 
 float mice_reader_read_float(Mice_Reader *reader);
 double mice_reader_read_double(Mice_Reader *reader);

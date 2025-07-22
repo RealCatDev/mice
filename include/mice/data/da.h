@@ -32,4 +32,14 @@
     (da)->count += (length);                                                     \
   } while (0)
 
+#define MICE_DA_AT(da, at) (da)->items[assert(at < (da)->count), at]
+
+#define MICE_DA_FAST_REMOVE(da, at)                \
+  do {                                             \
+    MICE_DA_AT(da, at) = (da)->items[(da)->count]; \
+    --(da)->count;                                 \
+  } while (0)
+
+#define MICE_DA_FREE(da) free((da)->items)
+
 #endif // _MICE_DATA_DA_H_

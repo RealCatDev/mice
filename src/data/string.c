@@ -14,7 +14,7 @@ Mice_String mice_reader_read_string(Mice_Reader *reader) {
 
   for (Mice_Varint i = 0; i < length; ++i) {
     char c = mice_reader_read_byte(reader);
-    assert(!(c & ~(1 << 7)));
+    assert(!(c & (1 << 7)));
     data[i] = c;
   }
 

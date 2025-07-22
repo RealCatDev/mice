@@ -1,12 +1,11 @@
-#include "mice/server.h"
+#include "server.h"
 
 int main(void) {
   // TODO: Add argument parsing
   // TODO: Add configuration
 
-  Mice_Server server = mice_server_create();
-  mice_server_run(server);
-  mice_server_destroy(server);
+  _Mice_Server server = {0};
+  _mice_server_run(&server);
 
   return 0;
 }

@@ -6,7 +6,6 @@
 typedef struct Mice_Packet {
   Mice_Varint length;
   Mice_Varint packetId;
-  char *data;
 } Mice_Packet;
 
 #endif // _MICE_PACKETS_PACKET_H_
