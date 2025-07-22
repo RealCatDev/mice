@@ -41,7 +41,8 @@ void _mice_server_process_packet(_Mice_Server *server, _Mice_Client *sender, Mic
 
     Mice_Packet_Handshake_In *p = (Mice_Packet_Handshake_In*)packet;
     assert(p->protocolVersion == 762);
-    sender->state = (_Mice_Client_State)p->nextState;
+    if (p->nextState < 1 || p->nextState > 2) sender->state = _COUNT_MICE_CLIENT_STATES;
+    else sender->state = (_Mice_Client_State)p->nextState;
   } break;
   case _MICE_CLIENT_STATE_STATUS: {
     if (packet->packetId == 0) {
