@@ -4,6 +4,7 @@
 
 #include "mice/packets/handshake.h"
 #include "mice/packets/status.h"
+#include "mice/packets/login.h"
 
 void _mice_server_run(_Mice_Server *server) {
   _mice_server_platform_init(server);
@@ -55,8 +56,25 @@ void _mice_server_process_packet(_Mice_Server *server, _Mice_Client *sender, Mic
       _mice_client_send_packet(sender, (Mice_Packet*)&response);
     } else assert(0);
   } break;
-  case _MICE_CLIENT_STATE_LOGIN: {
+  case _MICE_CLIENT_STATE_LOGIN: { // TODO: Implement encryption
+    if (packet->packetId == 0) {
+      Mice_Packet_Login_In_Login_Start *p = (Mice_Packet_Login_In_Login_Start*)packet;
 
+      Mice_Packet_Login_Out_Login_Success response = { .base.packetId = 2 };
+      if (!p->hasPlayerUuid) response.uuid = mice_uuid_offline(p->name.length, p->name.data);
+      else response.uuid = p->uuid;
+
+      response.username = p->name;
+      response.propertyCount = 0; // TODO: Query from (if in online mode): https://sessionserver.mojang.com/session/minecraft/profile/<UUID>
+
+      _mice_client_send_packet(sender, (Mice_Packet*)&response);
+
+      sender->state = _MICE_CLIENT_STATE_PLAY;
+    } else if (packet->packetId == 1) {
+      assert(0); // TODO: Implement
+    } else if (packet->packetId == 2) {
+      assert(0); // TODO: Implement
+    } else assert(0);
   } break;
   case _MICE_CLIENT_STATE_PLAY: {
 
