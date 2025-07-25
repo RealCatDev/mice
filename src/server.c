@@ -6,6 +6,9 @@
 #include "mice/packets/status.h"
 #include "mice/packets/login.h"
 
+#include "mice/data/stringBuilder.h"
+#include "mice/data/json.h"
+
 void _mice_server_run(_Mice_Server *server) {
   _mice_server_platform_init(server);
 
@@ -47,9 +50,32 @@ void _mice_server_process_packet(_Mice_Server *server, _Mice_Client *sender, Mic
   } break;
   case _MICE_CLIENT_STATE_STATUS: {
     if (packet->packetId == 0) {
+      Mice_Json *json = mice_json_create_object();
+
+      Mice_Json *version = mice_json_create_object();
+      mice_json_add_child(version, mice_json_create_string("1.19.4"), "name");
+      mice_json_add_child(version, mice_json_create_number(762), "protocol");
+      mice_json_add_child(json, version, "version");
+
+      Mice_Json *players = mice_json_create_object();
+      mice_json_add_child(players, mice_json_create_number(20), "max");
+      mice_json_add_child(players, mice_json_create_number(0),  "online");
+      mice_json_add_child(players, mice_json_create_array(),    "sample");
+      mice_json_add_child(json, players, "players");
+
+      Mice_Json *description = mice_json_create_object();
+      mice_json_add_child(description, mice_json_create_string("Mice server"), "text");
+      mice_json_add_child(description, mice_json_create_string("red"), "color");
+      mice_json_add_child(json, description, "description");
+
+      Mice_String_Builder jsonSb = {0};
+      mice_json_write_to_string_builder(json, &jsonSb);
+
       Mice_Packet_Status_Out_Status_Response response = { .base.packetId = 0 };
-      response.jsonResponse = MICE_STRING("{\"version\":{\"name\":\"1.19.4\",\"protocol\":762},\"players\":{\"max\":69,\"online\":0,\"sample\":[]},\"description\":{\"text\":\"Mice server\"}}");
+      response.jsonResponse = (Mice_String){ .data = jsonSb.items, .length = jsonSb.count };
       _mice_client_send_packet(sender, (Mice_Packet*)&response);
+
+      MICE_DA_FREE(&jsonSb);
     } else if (packet->packetId == 1) {
       Mice_Packet_Status_Out_Ping_Response response = { .base.packetId = 1 };
       response.payload = ((Mice_Packet_Status_In_Ping_Request*)packet)->payload;
