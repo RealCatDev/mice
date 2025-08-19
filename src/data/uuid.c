@@ -134,3 +134,22 @@ Mice_Uuid mice_uuid_offline(size_t usernameLength, const char username[usernameL
   uuid.bytes[8] = (uuid.bytes[8] & 0x3F) | 0x80;
   return uuid;
 }
+
+Mice_Hash mice_uuid_hash(Mice_Uuid uuid) {
+  uint64_t msb = 0, lsb = 0;
+
+  for (int i = 0; i < 8; i++) {
+    msb = (msb << 8) | uuid.bytes[i];
+  }
+
+  for (int i = 8; i < 16; i++) {
+    lsb = (lsb << 8) | uuid.bytes[i];
+  }
+
+  uint64_t hilo = msb ^ lsb;
+  return (Mice_Hash)((hilo >> 32) ^ (hilo & 0xFFFFFFFFU));
+}
+
+bool mice_uuid_equals(Mice_Uuid a, Mice_Uuid b) {
+  return memcmp(a.bytes, b.bytes, 16) == 0;
+}

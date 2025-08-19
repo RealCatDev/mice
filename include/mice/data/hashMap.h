@@ -131,5 +131,10 @@ typedef uint32_t Mice_Hash;
     }                                             \
     free((hm)->buckets);                          \
   } while (0)
-         
+
+// Some hash/equals functions for basic types
+
+Mice_Hash mice_u64_hash(uint64_t v);
+bool mice_u64_equals(uint64_t a, uint64_t b);
+
 #endif // _MICE_DATA_HASH_MAP_H_
